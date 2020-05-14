@@ -1,0 +1,17 @@
+---
+plugins:
+  - import
+  - babel
+
+parser: babel-eslint
+
+env:
+  es6: true
+  browser: true
+  node: true
+
+extends:
+  - 'airbnb-base'
+
+rules:
+  no-console: 0

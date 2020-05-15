@@ -21,11 +21,37 @@ let cursors;
 let stars;
 let score = 0;
 let scoreText;
+let bombs;
+let gameOver = false;
 
 function collectStar(players, star) {
   star.disableBody(true, true);
   score += 10;
   scoreText.setText(`Score: ${score}`);
+
+  if (stars.countActive(true) === 0) {
+    stars.children.iterate((child) => {
+      child.enableBody(true, child.x, 0, true, true);
+    });
+
+    const x = (players.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+
+    const bomb = bombs.create(x, 16, 'bomb');
+    bomb.setBounce(1);
+    bomb.setCollideWorldBounds(true);
+    bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    bomb.allowGravity = false;
+  }
+}
+
+function hitBomb(players) {
+  this.physics.pause();
+
+  players.setTint(0xff0000);
+
+  players.anims.play('turn');
+
+  gameOver = true;
 }
 
 function create() {
@@ -78,10 +104,18 @@ function create() {
 
   this.physics.add.overlap(player, stars, collectStar, null, this);
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+  bombs = this.physics.add.group();
+
+  this.physics.add.collider(bombs, platforms);
+  this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
 
 function update() {
+  if (gameOver) {
+    return;
+  }
   if (cursors.left.isDown) {
     player.setVelocityX(-160);
 

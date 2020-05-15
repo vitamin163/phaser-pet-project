@@ -11,12 +11,9 @@ const conf = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    publicPath: '',
   },
   devServer: {
     overlay: true,
-    contentBase: path.resolve(__dirname, 'dist'),
   },
   module: {
     rules: [
@@ -67,7 +64,6 @@ const conf = {
   plugins: [
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      filename: path.resolve(__dirname, 'dist/index.html'),
       template: path.resolve(__dirname, 'src/templates/index.html'),
     }),
     /* new MiniCssExtractPlugin({
